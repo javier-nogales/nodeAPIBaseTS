@@ -1,0 +1,11 @@
+$ npm init
+
+$ npm install -g typescript
+
+$ tsc --init
+
+    (edit config in tsconfig.json)
+
+$ npm install express --save
+
+$ npm install @types/express --save-dev
