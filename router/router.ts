@@ -30,15 +30,25 @@ router.post('/post/:id', (req:Request, res:Response) => {
     });
 });
 
-router.post('/post-json/', (req:Request, res:Response) => {
-    let user:User = new User(req.body.user.id,
-                             req.body.user.name,
-                             req.body.user.age);
-    res.json({
-        ok: true,
-        path: '/post-json',
-        result: user,
-    });
+router.post('/user/', (req:Request, res:Response) => {
+    try {
+        let user:User = new User(req.body.user.id,
+                                 req.body.user.name,
+                                 req.body.user.age);
+        res.json({
+            ok: true,
+            path: '/user',
+            result: user,
+        });
+    } catch (err) {
+        let trace:string|undefined = (err as Error).stack;
+        console.log(`Endpoint /user Error:\n${trace}`);
+        res.json({
+            ok: false,
+            path: 'user',
+            result: 'Error'
+        });
+    }
 });
 
 export default router;
