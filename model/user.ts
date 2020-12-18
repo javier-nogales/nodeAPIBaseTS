@@ -19,8 +19,8 @@ export default class User {
 
     public static assertIsValid(user:User) {
         if (!User.isValid(user))
-            throw Error(`
-                Invalid User arguments: [${user.id}/${typeof user.id}], [${user.name}/${typeof user.name}], [${user.age}/${typeof user.age}] do not match to (string/string/number)`
+            throw Error(
+                `Invalid User arguments: [${user.id}/${typeof user.id}], [${user.name}/${typeof user.name}], [${user.age}/${typeof user.age}] do not match to (string/string/number)`
             );
     }
 }
