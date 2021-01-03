@@ -1,9 +1,19 @@
 import {Router, Request, Response} from 'express';
 
 import User from '../model/user';
+import Login from '../model/Login';
+import SecurityFilter from '../security/securityFilter';
 
 
 const router = Router();
+
+router.all(
+  '/*',
+  new SecurityFilter().checkAuth,
+  (req, res, next) => {
+      next();
+  }
+);
 
 router.get('/', (req:Request, res:Response) => {
     res.json({
@@ -50,5 +60,26 @@ router.post('/user/', (req:Request, res:Response) => {
         });
     }
 });
+
+// router.post('/login', (req:Request, res:Response) => {
+//     try {
+//         let login:Login = new Login(
+//                                 req.body.login.id,
+//                                 req.body.login.passwd);
+//         res.json({
+//             ok: true,
+//             path: '/login',
+//             result: login,
+//         });
+//     } catch (err) {
+//         let trace:string|undefined = (err as Error).stack;
+//         console.log(`Endpoint /login Error:\n${trace}`);
+//         res.json({
+//             ok: false,
+//             path: 'login',
+//             result: 'Error'
+//         });
+//     }
+// });
 
 export default router;
