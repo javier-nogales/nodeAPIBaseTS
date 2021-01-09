@@ -1,8 +1,8 @@
 import {Router, Request, Response} from 'express';
 
-import User from '../model/user';
-import Login from '../model/Login';
-import SecurityFilter from '../security/securityFilter';
+import User from '../src/endpoint/user/user';
+import Login from '../src/endpoint/login/Login';
+import SecurityFilter from '../src/security/securityFilter';
 
 
 const router = Router();

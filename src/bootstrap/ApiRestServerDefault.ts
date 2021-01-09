@@ -1,10 +1,11 @@
 import express = require('express');
-import Login from '../model/Login';
+import ApiRestServer from './ApiRestServer';
+import Login from '../endpoint/login/Login';
 import SecurityFilter from '../security/securityFilter';
-import {ApiRestServerConfig} from '../model/ApiRestServerConfig'
+import {ApiRestServerConfig} from './ApiRestServerConfig'
 import ApiRestRouter from '../router/ApiRestRouter';
 
-export default class ApiRestServer {
+export default class ApiRestServerDefault implements ApiRestServer{
 
     private port:number;
     private app:express.Application;
@@ -13,19 +14,15 @@ export default class ApiRestServer {
     loginPath: string;
     securityFilter: SecurityFilter;
 
-    public static from(config:ApiRestServerConfig):ApiRestServer {
-        return new ApiRestServer(config);
-    }
-
-    public useRouter(router:ApiRestRouter):void {
-        this.app.use(router.router);
+    public static from(config:ApiRestServerConfig):ApiRestServerDefault {
+        return new ApiRestServerDefault(config);
     }
 
     public start(callback:Function):void {
         this.app.listen(this.port, callback());
     }
 
-    private constructor(config:ApiRestServerConfig) {
+    constructor(config:ApiRestServerConfig) {
         this.port = config.port;
         this.basePath = config.basePath;
         this.loginPath = config.loginPath;
@@ -79,9 +76,15 @@ export default class ApiRestServer {
         });
     }
 
-    public useRoutes(...routes:express.Router[]):void {
-        routes.forEach((route) => {
-            this.app.use(route);
+    // public useRouters(...routes:express.Router[]):void {
+    //     routes.forEach((route) => {
+    //         this.app.use(route);
+    //     });
+    // }
+
+    public useRouters(routers:ApiRestRouter[]):void {
+        routers.forEach((router) => {
+            this.app.use(router.get());
         });
     }
 

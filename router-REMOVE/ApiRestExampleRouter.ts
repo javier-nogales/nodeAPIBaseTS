@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from 'express';
-import User from "../model/user";
+import User from "../src/endpoint/user/user";
 
 export default class ApiRestExampleRouter {
     router:Router;

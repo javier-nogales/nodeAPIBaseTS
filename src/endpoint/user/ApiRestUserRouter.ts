@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { Request, Response } from 'express';
-import { ApiRestRouterConfig } from "../model/ApiRestRouterConfig";
-import User from "../model/user";
-import SecurityFilter from "../security/securityFilter";
+import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
+import User from "./user";
+import SecurityFilter from "../../security/securityFilter";
+import ApiRestRouter from "../../router/ApiRestRouter";
 
-export default class ApiRestUserRouter {
+export default class ApiRestUserRouter implements ApiRestRouter {
     router:Router;
     securityFilter:SecurityFilter;
     basePath:string;
@@ -12,9 +13,13 @@ export default class ApiRestUserRouter {
     constructor(config:ApiRestRouterConfig) {
         this.router = Router();
         this.securityFilter = config.securityFilter;
-        this.basePath = config.basePath;
+        this.basePath = config.basePath;    
         this.securizeRoute();
         this.build();
+    }
+
+    public get():Router {
+        return this.router;
     }
 
     private build():void {

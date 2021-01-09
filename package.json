@@ -2,9 +2,9 @@
   "name": "nodeapibasets",
   "version": "0.0.1",
   "description": "NodeJS API base with Express and TypeScript",
-  "main": "app.js",
+  "main": "exec.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "tsc && node out/exec.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
