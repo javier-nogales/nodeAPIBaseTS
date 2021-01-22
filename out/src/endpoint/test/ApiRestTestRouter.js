@@ -4,15 +4,20 @@ var express_1 = require("express");
 var ApiRestTestRouter = /** @class */ (function () {
     function ApiRestTestRouter(config) {
         this.router = express_1.Router();
-        this.securityFilter = config.securityFilter;
         this.basePath = config.basePath;
-        this.securizeRoute();
-        this.build();
+        this.securityFilter = config.securityFilter;
+        this.init();
     }
     ApiRestTestRouter.prototype.get = function () {
         return this.router;
     };
-    ApiRestTestRouter.prototype.build = function () {
+    ApiRestTestRouter.prototype.init = function () {
+        if (this.securityFilter) {
+            this.securizeRoute(this.securityFilter);
+        }
+        this.loadRoutes();
+    };
+    ApiRestTestRouter.prototype.loadRoutes = function () {
         var _this = this;
         this.router.get(this.basePath, function (req, res) {
             res.json({
@@ -21,8 +26,8 @@ var ApiRestTestRouter = /** @class */ (function () {
             });
         });
     };
-    ApiRestTestRouter.prototype.securizeRoute = function () {
-        this.router.all(this.basePath, this.securityFilter.checkAuth, function (req, res, next) {
+    ApiRestTestRouter.prototype.securizeRoute = function (securityFilter) {
+        this.router.all(this.basePath, securityFilter.checkAuth, function (req, res, next) {
             next();
         });
     };

@@ -8,14 +8,16 @@ var Login_1 = __importDefault(require("../user/Login"));
 var ApiRestLoginRouter = /** @class */ (function () {
     function ApiRestLoginRouter(config) {
         this.router = express_1.Router();
-        // this.securityFilter = config.securityFilter;
         this.basePath = config.basePath;
-        this.build();
+        this.init();
     }
     ApiRestLoginRouter.prototype.get = function () {
         return this.router;
     };
-    ApiRestLoginRouter.prototype.build = function () {
+    ApiRestLoginRouter.prototype.init = function () {
+        this.loadRoutes();
+    };
+    ApiRestLoginRouter.prototype.loadRoutes = function () {
         var _this = this;
         this.router.post(this.basePath, function (req, res) {
             try {

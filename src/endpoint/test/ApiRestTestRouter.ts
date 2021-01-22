@@ -7,22 +7,29 @@ import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
 export default class ApiRestTestRouter implements ApiRestRouter {
 
     router:Router;
-    securityFilter:SecurityFilter;
     basePath:string;
+
+    securityFilter?:SecurityFilter;
 
     constructor(config:ApiRestRouterConfig) {
         this.router = Router();
+        this.basePath = config.basePath;
         this.securityFilter = config.securityFilter;
-        this.basePath = config.basePath;    
-        this.securizeRoute();
-        this.build();
+        this.init();
     }
 
     public get():Router {
         return this.router;
     }
 
-    private build():void {
+    private init():void {
+        if (this.securityFilter) {
+            this.securizeRoute(this.securityFilter);
+        }
+        this.loadRoutes();
+    }
+
+    private loadRoutes():void {
         this.router.get(this.basePath, (req:Request, res:Response) => {
             res.json({
                 ok: true,
@@ -31,10 +38,10 @@ export default class ApiRestTestRouter implements ApiRestRouter {
         });
     }
 
-    private securizeRoute():void {
+    private securizeRoute(securityFilter:SecurityFilter):void {
         this.router.all(
             this.basePath,
-            this.securityFilter.checkAuth,
+            securityFilter.checkAuth,
             (req, res, next) => {
                 next();
             }

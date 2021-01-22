@@ -8,15 +8,20 @@ var user_1 = __importDefault(require("./user"));
 var ApiRestUserRouter = /** @class */ (function () {
     function ApiRestUserRouter(config) {
         this.router = express_1.Router();
-        this.securityFilter = config.securityFilter;
         this.basePath = config.basePath;
-        this.securizeRoute();
-        this.build();
+        this.securityFilter = config.securityFilter;
+        this.init();
     }
     ApiRestUserRouter.prototype.get = function () {
         return this.router;
     };
-    ApiRestUserRouter.prototype.build = function () {
+    ApiRestUserRouter.prototype.init = function () {
+        if (this.securityFilter) {
+            this.securizeRoutes(this.securityFilter);
+        }
+        this.loadRoutes();
+    };
+    ApiRestUserRouter.prototype.loadRoutes = function () {
         var _this = this;
         this.router.post(this.basePath, function (req, res) {
             try {
@@ -38,8 +43,8 @@ var ApiRestUserRouter = /** @class */ (function () {
             }
         });
     };
-    ApiRestUserRouter.prototype.securizeRoute = function () {
-        this.router.all(this.basePath, this.securityFilter.checkAuth, function (req, res, next) {
+    ApiRestUserRouter.prototype.securizeRoutes = function (securityFilter) {
+        this.router.all(this.basePath, securityFilter.checkAuth, function (req, res, next) {
             next();
         });
     };

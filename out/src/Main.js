@@ -20,8 +20,7 @@ var Main = /** @class */ (function () {
         });
         this.router = [
             new ApiRestLoginRouter_1.default({
-                basePath: '/login',
-                securityFilter: this.securityFilter // not used
+                basePath: '/login'
             }),
             new ApiRestTestRouter_1.default({
                 basePath: '/test',

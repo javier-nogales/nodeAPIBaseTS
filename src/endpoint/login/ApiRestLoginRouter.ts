@@ -12,14 +12,18 @@ export default class ApiRestLoginRouter implements ApiRestRouter {
     constructor(config:ApiRestRouterConfig) {
         this.router = Router();
         this.basePath = config.basePath;
-        this.build();
+        this.init();
     }
 
     public get():Router {
         return this.router;
     }
 
-    private build():void {
+    private init():void {
+        this.loadRoutes();
+    }
+
+    private loadRoutes():void {
         this.router.post(
             this.basePath, 
             (req:Request, res:Response) => {

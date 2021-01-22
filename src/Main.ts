@@ -25,8 +25,7 @@ export default class Main {
         });
         this.router = [
             new ApiRestLoginRouter({
-                basePath: '/login',
-                securityFilter: this.securityFilter // not used
+                basePath: '/login'
             }),
             new ApiRestTestRouter({
                 basePath: '/test',

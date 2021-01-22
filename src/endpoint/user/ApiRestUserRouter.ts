@@ -7,23 +7,30 @@ import ApiRestRouter from "../../router/ApiRestRouter";
 
 export default class ApiRestUserRouter implements ApiRestRouter {
     router:Router;
-    securityFilter?:SecurityFilter;
     basePath:string;
+
+    securityFilter?:SecurityFilter;
 
     constructor(config:ApiRestRouterConfig) {
         this.router = Router();
+        this.basePath = config.basePath;
         this.securityFilter = config.securityFilter;
-        this.basePath = config.basePath;   
-        if (this.securityFilter) 
-            this.securizeRoute(config.securityFilter);
-        this.build();
+        
+        this.init();
     }
 
     public get():Router {
         return this.router;
     }
 
-    private build():void {
+    private init() {
+        if (this.securityFilter) {
+            this.securizeRoutes(this.securityFilter);
+        }
+        this.loadRoutes();
+    }
+
+    private loadRoutes():void {
         this.router.post(this.basePath, (req:Request, res:Response) => {
             try {
                 let user:User = new User(req.body.user.id,
@@ -46,13 +53,13 @@ export default class ApiRestUserRouter implements ApiRestRouter {
         });
     }
 
-    private securizeRoute(securityFilter:SecurityFilter):void {
+    private securizeRoutes(securityFilter:SecurityFilter):void {
         this.router.all(
             this.basePath,
             securityFilter.checkAuth,
             (req, res, next) => {
                 next();
             }
-        );
+        )
     }
 }
