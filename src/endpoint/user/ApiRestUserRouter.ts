@@ -7,14 +7,15 @@ import ApiRestRouter from "../../router/ApiRestRouter";
 
 export default class ApiRestUserRouter implements ApiRestRouter {
     router:Router;
-    securityFilter:SecurityFilter;
+    securityFilter?:SecurityFilter;
     basePath:string;
 
     constructor(config:ApiRestRouterConfig) {
         this.router = Router();
         this.securityFilter = config.securityFilter;
-        this.basePath = config.basePath;    
-        this.securizeRoute();
+        this.basePath = config.basePath;   
+        if (this.securityFilter) 
+            this.securizeRoute(config.securityFilter);
         this.build();
     }
 
@@ -30,7 +31,7 @@ export default class ApiRestUserRouter implements ApiRestRouter {
                                          req.body.user.age);
                 res.json({
                     ok: true,
-                    path: '/user',
+                    path: this.basePath,
                     result: user,
                 });
             } catch (err) {
@@ -45,10 +46,10 @@ export default class ApiRestUserRouter implements ApiRestRouter {
         });
     }
 
-    private securizeRoute():void {
+    private securizeRoute(securityFilter:SecurityFilter):void {
         this.router.all(
-            '/user',
-            this.securityFilter.checkAuth,
+            this.basePath,
+            securityFilter.checkAuth,
             (req, res, next) => {
                 next();
             }
