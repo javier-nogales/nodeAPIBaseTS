@@ -1,32 +1,20 @@
-import { Router } from "express";
-import ApiRestRouter from "../../router/ApiRestRouter";
+import ApiRestRouterBase from "../../router/ApiRestRouterBase";
 import { Request, Response } from 'express';
 import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
 import Login from "../user/Login";
+import ApiRestLoginController from "./ApiRestLoginController";
 
-export default class ApiRestLoginRouter implements ApiRestRouter {
-
-    router:Router;
-    basePath:string;
+export default class ApiRestLoginRouter extends ApiRestRouterBase {
 
     constructor(config:ApiRestRouterConfig) {
-        this.router = Router();
-        this.basePath = config.basePath;
-        this.init();
+        super(config);
     }
 
-    public get():Router {
-        return this.router;
-    }
-
-    private init():void {
-        this.loadRoutes();
-    }
-
-    private loadRoutes():void {
+    protected loadRoutes():void {
         this.router.post(
             this.basePath, 
             (req:Request, res:Response) => {
+                ApiRestLoginController.signIn(req.body.login);
                 try {
                     let login:Login = new Login(req.body.login.id,
                                                 req.body.login.passwd);
@@ -46,4 +34,5 @@ export default class ApiRestLoginRouter implements ApiRestRouter {
                 }
         });
     }
+
 }

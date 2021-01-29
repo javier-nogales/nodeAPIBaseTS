@@ -3,34 +3,15 @@ import { Request, Response } from 'express';
 import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
 import User from "./user";
 import SecurityFilter from "../../security/securityFilter";
-import ApiRestRouter from "../../router/ApiRestRouter";
+import ApiRestRouterBase from "../../router/ApiRestRouterBase";
 
-export default class ApiRestUserRouter implements ApiRestRouter {
-    router:Router;
-    basePath:string;
-
-    securityFilter?:SecurityFilter;
+export default class ApiRestUserRouter extends ApiRestRouterBase {
 
     constructor(config:ApiRestRouterConfig) {
-        this.router = Router();
-        this.basePath = config.basePath;
-        this.securityFilter = config.securityFilter;
-        
-        this.init();
+        super(config);
     }
 
-    public get():Router {
-        return this.router;
-    }
-
-    private init() {
-        if (this.securityFilter) {
-            this.securizeRoutes(this.securityFilter);
-        }
-        this.loadRoutes();
-    }
-
-    private loadRoutes():void {
+    protected loadRoutes():void {
         this.router.post(this.basePath, (req:Request, res:Response) => {
             try {
                 let user:User = new User(req.body.user.id,
@@ -51,15 +32,5 @@ export default class ApiRestUserRouter implements ApiRestRouter {
                 });
             }
         });
-    }
-
-    private securizeRoutes(securityFilter:SecurityFilter):void {
-        this.router.all(
-            this.basePath,
-            securityFilter.checkAuth,
-            (req, res, next) => {
-                next();
-            }
-        )
     }
 }

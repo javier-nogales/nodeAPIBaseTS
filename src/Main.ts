@@ -1,7 +1,7 @@
 import { ApiRestConfig } from "./config/ApiRestConfig";
 import ApiRestServerDefault from "./bootstrap/ApiRestServerDefault";
 import ApiRestServer from "./bootstrap/ApiRestServerDefault";
-import ApiRestRouter from "./router/ApiRestRouter";
+import ApiRestRouterBase from "./router/ApiRestRouterBase";
 import SecurityFilter from "./security/securityFilter";
 import ApiRestUserRouter from "./endpoint/user/ApiRestUserRouter";
 import ApiRestTestRouter from "./endpoint/test/ApiRestTestRouter";
@@ -11,7 +11,7 @@ export default class Main {
 
     private config:ApiRestConfig;
     private server:ApiRestServer;
-    private router:ApiRestRouter[];
+    private router:ApiRestRouterBase[];
     private securityFilter:SecurityFilter;
 
     constructor(config:ApiRestConfig) {
@@ -19,9 +19,7 @@ export default class Main {
         this.securityFilter = new SecurityFilter();
         this.server = new ApiRestServerDefault({
             port: config.port,
-            basePath: config.basePath,
-            loginPath: '/login',
-            securityFilter: this.securityFilter
+            basePath: config.basePath
         });
         this.router = [
             new ApiRestLoginRouter({

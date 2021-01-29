@@ -14,9 +14,7 @@ var Main = /** @class */ (function () {
         this.securityFilter = new securityFilter_1.default();
         this.server = new ApiRestServerDefault_1.default({
             port: config.port,
-            basePath: config.basePath,
-            loginPath: '/login',
-            securityFilter: this.securityFilter
+            basePath: config.basePath
         });
         this.router = [
             new ApiRestLoginRouter_1.default({

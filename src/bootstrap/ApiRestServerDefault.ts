@@ -1,7 +1,7 @@
 import express = require('express');
 import ApiRestServer from './ApiRestServer';
 import {ApiRestServerConfig} from './ApiRestServerConfig'
-import ApiRestRouter from '../router/ApiRestRouter';
+import ApiRestRouterBase from '../router/ApiRestRouterBase';
 
 export default class ApiRestServerDefault implements ApiRestServer{
 
@@ -30,7 +30,7 @@ export default class ApiRestServerDefault implements ApiRestServer{
         this.app.use(express.json());
     }
 
-    public useRouters(routers:ApiRestRouter[]):void {
+    public useRouters(routers:ApiRestRouterBase[]):void {
         routers.forEach((router) => {
             this.app.use(router.get());
         });

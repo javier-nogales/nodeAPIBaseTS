@@ -1,26 +1,28 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
 var user_1 = __importDefault(require("./user"));
-var ApiRestUserRouter = /** @class */ (function () {
+var ApiRestRouterBase_1 = __importDefault(require("../../router/ApiRestRouterBase"));
+var ApiRestUserRouter = /** @class */ (function (_super) {
+    __extends(ApiRestUserRouter, _super);
     function ApiRestUserRouter(config) {
-        this.router = express_1.Router();
-        this.basePath = config.basePath;
-        this.securityFilter = config.securityFilter;
-        this.init();
+        return _super.call(this, config) || this;
     }
-    ApiRestUserRouter.prototype.get = function () {
-        return this.router;
-    };
-    ApiRestUserRouter.prototype.init = function () {
-        if (this.securityFilter) {
-            this.securizeRoutes(this.securityFilter);
-        }
-        this.loadRoutes();
-    };
     ApiRestUserRouter.prototype.loadRoutes = function () {
         var _this = this;
         this.router.post(this.basePath, function (req, res) {
@@ -43,12 +45,7 @@ var ApiRestUserRouter = /** @class */ (function () {
             }
         });
     };
-    ApiRestUserRouter.prototype.securizeRoutes = function (securityFilter) {
-        this.router.all(this.basePath, securityFilter.checkAuth, function (req, res, next) {
-            next();
-        });
-    };
     return ApiRestUserRouter;
-}());
+}(ApiRestRouterBase_1.default));
 exports.default = ApiRestUserRouter;
 //# sourceMappingURL=ApiRestUserRouter.js.map
