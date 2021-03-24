@@ -1,8 +1,8 @@
-import Main from "./src/Main";
+import ServerApp from "./src/ServerApp";
 
-const main = new Main({
+const serverApp = new ServerApp({
     port: 3000,
     basePath: '/',
 });
 
-main.init();
+serverApp.init();

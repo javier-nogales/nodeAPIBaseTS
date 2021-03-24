@@ -3,6 +3,8 @@ import ApiRestServer from './ApiRestServer';
 import {ApiRestServerConfig} from './ApiRestServerConfig'
 import ApiRestRouterBase from '../router/ApiRestRouterBase';
 
+import { Request, Response } from 'express';
+
 export default class ApiRestServerDefault implements ApiRestServer{
 
     private port:number;
@@ -24,6 +26,7 @@ export default class ApiRestServerDefault implements ApiRestServer{
 
     private init():void {
         this.useJson();
+        this.app.use(this.errorHandler);
     }
 
     private useJson():void {
@@ -34,6 +37,16 @@ export default class ApiRestServerDefault implements ApiRestServer{
         routers.forEach((router) => {
             this.app.use(router.get());
         });
+    }
+
+    private errorHandler(err:Error, req:Request, res:Response, next:Function) {
+        if (res.headersSent) {
+            return next(err);
+        }
+        // res.status(500);
+        // res.render('error', { error: err });
+
+        return res.status(500).render('500');
     }
 
 

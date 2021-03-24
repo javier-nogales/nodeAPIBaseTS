@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ApiRestRouterBase_1 = __importDefault(require("../../router/ApiRestRouterBase"));
 var Login_1 = __importDefault(require("../user/Login"));
 var ApiRestLoginController_1 = __importDefault(require("./ApiRestLoginController"));
+var ErrorHandler_1 = __importDefault(require("../../error/ErrorHandler"));
 var ApiRestLoginRouter = /** @class */ (function (_super) {
     __extends(ApiRestLoginRouter, _super);
     function ApiRestLoginRouter(config) {
@@ -27,23 +28,20 @@ var ApiRestLoginRouter = /** @class */ (function (_super) {
     ApiRestLoginRouter.prototype.loadRoutes = function () {
         var _this = this;
         this.router.post(this.basePath, function (req, res) {
-            ApiRestLoginController_1.default.signIn(req.body.login);
             try {
                 var login = new Login_1.default(req.body.login.id, req.body.login.passwd);
-                res.json({
-                    ok: true,
-                    path: _this.basePath,
-                    result: login,
-                });
+                ApiRestLoginController_1.default.signIn(login)
+                    .then(function (login) {
+                    res.json({
+                        ok: true,
+                        path: _this.basePath,
+                        result: login,
+                    });
+                })
+                    .catch(function (err) { return ErrorHandler_1.default.controllerErrorHandler(err, res); });
             }
             catch (err) {
-                var trace = err.stack;
-                console.log("Endpoint /login Error:\n" + trace);
-                res.json({
-                    ok: false,
-                    path: _this.basePath,
-                    result: 'Error'
-                });
+                ErrorHandler_1.default.requestErrorHandler(err, res);
             }
         });
     };

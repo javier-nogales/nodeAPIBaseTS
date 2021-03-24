@@ -7,7 +7,7 @@ import ApiRestUserRouter from "./endpoint/user/ApiRestUserRouter";
 import ApiRestTestRouter from "./endpoint/test/ApiRestTestRouter";
 import ApiRestLoginRouter from "./endpoint/login/ApiRestLoginRouter";
 
-export default class Main {
+export default class ServerApp {
 
     private config:ApiRestConfig;
     private server:ApiRestServer;
@@ -22,9 +22,11 @@ export default class Main {
             basePath: config.basePath
         });
         this.router = [
+            // Default routers
             new ApiRestLoginRouter({
                 basePath: '/login'
             }),
+            // Add the necesary routers here
             new ApiRestTestRouter({
                 basePath: '/test',
                 securityFilter: this.securityFilter

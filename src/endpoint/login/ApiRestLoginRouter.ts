@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
 import Login from "../user/Login";
 import ApiRestLoginController from "./ApiRestLoginController";
+import ErrorHandler from "../../error/ErrorHandler";
 
 export default class ApiRestLoginRouter extends ApiRestRouterBase {
 
@@ -11,28 +12,34 @@ export default class ApiRestLoginRouter extends ApiRestRouterBase {
     }
 
     protected loadRoutes():void {
+        this.loginUser();
+    }
+
+    private loginUser():void {
         this.router.post(
             this.basePath, 
             (req:Request, res:Response) => {
-                ApiRestLoginController.signIn(req.body.login);
                 try {
+                    // map request 
                     let login:Login = new Login(req.body.login.id,
                                                 req.body.login.passwd);
-                    res.json({
-                        ok: true,
-                        path: this.basePath,
-                        result: login,
-                    });
+                    // call to controller
+                    ApiRestLoginController.signIn(login)
+                                          .then((login:Login) => {
+                                              // map return to response
+                                            res.json({
+                                                ok: true,
+                                                path: this.basePath,
+                                                result: login,
+                                            });
+                                          })
+                                          .catch(err => ErrorHandler.controllerErrorHandler(err, res));
+                   
                 } catch (err) {
-                    let trace:string|undefined = (err as Error).stack;
-                    console.log(`Endpoint /login Error:\n${trace}`);
-                    res.json({
-                        ok: false,
-                        path: this.basePath,
-                        result: 'Error'
-                    });
+                    ErrorHandler.requestErrorHandler(err, res);
                 }
         });
     }
 
 }
+

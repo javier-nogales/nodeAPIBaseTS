@@ -15,6 +15,7 @@ var ApiRestServerDefault = /** @class */ (function () {
     };
     ApiRestServerDefault.prototype.init = function () {
         this.useJson();
+        this.app.use(this.errorHandler);
     };
     ApiRestServerDefault.prototype.useJson = function () {
         this.app.use(express.json());
@@ -24,6 +25,14 @@ var ApiRestServerDefault = /** @class */ (function () {
         routers.forEach(function (router) {
             _this.app.use(router.get());
         });
+    };
+    ApiRestServerDefault.prototype.errorHandler = function (err, req, res, next) {
+        if (res.headersSent) {
+            return next(err);
+        }
+        // res.status(500);
+        // res.render('error', { error: err });
+        return res.status(500).render('500');
     };
     return ApiRestServerDefault;
 }());
