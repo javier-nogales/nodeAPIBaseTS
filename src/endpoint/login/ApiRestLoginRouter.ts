@@ -1,11 +1,19 @@
 import ApiRestRouterBase from "../../router/ApiRestRouterBase";
 import { Request, Response } from 'express';
 import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
-import Login from "../user/Login";
+import Login from "./Login";
 import ApiRestLoginController from "./ApiRestLoginController";
-import ErrorHandler from "../../error/ErrorHandler";
+import ErrorHandler from "../../core/error/ErrorHandler";
+import ApiRestResponseHandler from "../../core/http/ApiRestResponseHandler";
+import ApiRestLoginValidationHandler from "./ApiRestLoginValidationHandler";
+
+const paths = {
+    LOGIN_USER: "/userlogin"
+}
 
 export default class ApiRestLoginRouter extends ApiRestRouterBase {
+
+    private LOGIN_USER:String = "/userlogin";
 
     constructor(config:ApiRestRouterConfig) {
         super(config);
@@ -17,26 +25,17 @@ export default class ApiRestLoginRouter extends ApiRestRouterBase {
 
     private loginUser():void {
         this.router.post(
-            this.basePath, 
-            (req:Request, res:Response) => {
+            this.basePath + paths.LOGIN_USER, 
+            async (req:Request, res:Response) => {
                 try {
-                    // map request 
-                    let login:Login = new Login(req.body.login.id,
-                                                req.body.login.passwd);
-                    // call to controller
-                    ApiRestLoginController.signIn(login)
-                                          .then((login:Login) => {
-                                              // map return to response
-                                            res.json({
-                                                ok: true,
-                                                path: this.basePath,
-                                                result: login,
-                                            });
-                                          })
-                                          .catch(err => ErrorHandler.controllerErrorHandler(err, res));
-                   
+                    //[1] Validate request entry
+                    const login:Login = await ApiRestLoginValidationHandler.login(req);
+                    //[2] Call to controller method
+                    const dataOut:any = await ApiRestLoginController.signIn(login);
+                    //[3] Send response
+                    ApiRestResponseHandler.respond(res, dataOut);
                 } catch (err) {
-                    ErrorHandler.requestErrorHandler(err, res);
+                    ErrorHandler.requestErrorHandler(res, err);
                 }
         });
     }

@@ -35,16 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var ApiRestLoginError_1 = __importDefault(require("../../core/error/ApiRestLoginError"));
 var ApiRestLoginController = /** @class */ (function () {
     function ApiRestLoginController() {
     }
     ApiRestLoginController.prototype.signIn = function (login) {
         return __awaiter(this, void 0, void 0, function () {
-            var json;
             return __generator(this, function (_a) {
-                json = JSON.parse("esto no es un JSON");
-                return [2 /*return*/, login];
+                // throw new Error("Custom error has been throwed");
+                // let json = JSON.parse("esto no es un JSON");
+                throw new ApiRestLoginError_1.default("Wrong user or password.");
             });
         });
     };

@@ -1,7 +1,7 @@
 import {Router, Request, Response} from 'express';
 
 import User from '../src/endpoint/user/user';
-import Login from '../src/endpoint/user/Login';
+import Login from '../src/endpoint/login/Login';
 import SecurityFilter from '../src/security/securityFilter';
 
 
