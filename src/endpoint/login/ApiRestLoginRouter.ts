@@ -1,5 +1,5 @@
 import ApiRestRouterBase from "../../router/ApiRestRouterBase";
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ApiRestRouterConfig } from "../../router/ApiRestRouterConfig";
 import Login from "./Login";
 import ApiRestLoginController from "./ApiRestLoginController";
@@ -26,7 +26,7 @@ export default class ApiRestLoginRouter extends ApiRestRouterBase {
     private loginUser():void {
         this.router.post(
             this.basePath + paths.LOGIN_USER, 
-            async (req:Request, res:Response) => {
+            async (req:Request, res:Response, next:NextFunction) => {
                 try {
                     //[1] Validate request entry
                     const login:Login = await ApiRestLoginValidationHandler.login(req);
@@ -35,7 +35,8 @@ export default class ApiRestLoginRouter extends ApiRestRouterBase {
                     //[3] Send response
                     ApiRestResponseHandler.respond(res, dataOut);
                 } catch (err) {
-                    ErrorHandler.requestErrorHandler(res, err);
+                    // ErrorHandler.requestErrorHandler(res, err);
+                    next(err);
                 }
         });
     }

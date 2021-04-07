@@ -8,7 +8,7 @@ var ApiRestLoginError_1 = __importDefault(require("./ApiRestLoginError"));
 var ErrorHandler = /** @class */ (function () {
     function ErrorHandler() {
     }
-    ErrorHandler.prototype.controllerErrorHandler = function (res, err) {
+    ErrorHandler.prototype.controllerErrorHandler = function (err, req, res, next) {
         var trace = err.stack;
         console.log('ERROR Catched with controllerErrorHandler');
         console.log("Endpoint /login Error:\n" + trace);
@@ -17,7 +17,7 @@ var ErrorHandler = /** @class */ (function () {
             result: trace
         });
     };
-    ErrorHandler.prototype.requestErrorHandler = function (res, err) {
+    ErrorHandler.prototype.requestErrorHandler = function (err, req, res, next) {
         if (err instanceof ApiRestAppError_1.default) {
             console.log('Aplication error catched.');
             if (err instanceof ApiRestLoginError_1.default) {
@@ -34,8 +34,17 @@ var ErrorHandler = /** @class */ (function () {
         }
         else {
             console.log('Unknow error catched.');
-            res.status(500).json({
-                error: "Unknow error"
+            res.status(500);
+            // res.render('error', {
+            //     error: err
+            // });
+            var msg = err.message;
+            var name_2 = err.name;
+            res.json({
+                error: {
+                    name: name_2,
+                    msg: msg
+                }
             });
         }
     };

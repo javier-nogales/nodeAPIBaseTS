@@ -4,6 +4,7 @@ export default class ApiRestAppError extends Error{
         super(...params);
         Object.setPrototypeOf(this, new.target.prototype);
         this.name = ApiRestAppError.name;
+        
     }
 
 }

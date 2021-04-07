@@ -7,7 +7,8 @@ class ApiRestLoginController {
     public async signIn(login:Login):Promise<Login> {
         // throw new Error("Custom error has been throwed");
         // let json = JSON.parse("esto no es un JSON");
-        throw new ApiRestLoginError("Wrong user or password.");
+        // throw new ApiRestLoginError("Wrong user or password.");
+        throw new Error("Test error");
         return login;
     }
 

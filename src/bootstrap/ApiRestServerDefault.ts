@@ -3,7 +3,8 @@ import ApiRestServer from './ApiRestServer';
 import {ApiRestServerConfig} from './ApiRestServerConfig'
 import ApiRestRouterBase from '../router/ApiRestRouterBase';
 
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import ErrorHandler from '../core/error/ErrorHandler';
 
 export default class ApiRestServerDefault implements ApiRestServer{
 
@@ -26,7 +27,7 @@ export default class ApiRestServerDefault implements ApiRestServer{
 
     private init():void {
         this.useJson();
-        this.app.use(this.errorHandler);
+        this.app.use(ErrorHandler.requestErrorHandler);
     }
 
     private useJson():void {
@@ -35,19 +36,20 @@ export default class ApiRestServerDefault implements ApiRestServer{
 
     public useRouters(routers:ApiRestRouterBase[]):void {
         routers.forEach((router) => {
+            router.get().use(ErrorHandler.requestErrorHandler);
             this.app.use(router.get());
         });
     }
 
-    private errorHandler(err:Error, req:Request, res:Response, next:Function) {
-        if (res.headersSent) {
-            return next(err);
-        }
-        // res.status(500);
-        // res.render('error', { error: err });
+    // private errorHandler(err:Error, req:Request, res:Response, next:NextFunction) {
+    //     if (res.headersSent) {
+    //         return next(err);
+    //     }
+    //     // res.status(500);
+    //     // res.render('error', { error: err });
 
-        return res.status(500).render('500');
-    }
+    //     return res.status(500).json('Something broke!');
+    // }
 
 
 }

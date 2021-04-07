@@ -54,7 +54,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ApiRestRouterBase_1 = __importDefault(require("../../router/ApiRestRouterBase"));
 var ApiRestLoginController_1 = __importDefault(require("./ApiRestLoginController"));
-var ErrorHandler_1 = __importDefault(require("../../core/error/ErrorHandler"));
 var ApiRestResponseHandler_1 = __importDefault(require("../../core/http/ApiRestResponseHandler"));
 var ApiRestLoginValidationHandler_1 = __importDefault(require("./ApiRestLoginValidationHandler"));
 var paths = {
@@ -72,7 +71,7 @@ var ApiRestLoginRouter = /** @class */ (function (_super) {
     };
     ApiRestLoginRouter.prototype.loginUser = function () {
         var _this = this;
-        this.router.post(this.basePath + paths.LOGIN_USER, function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+        this.router.post(this.basePath + paths.LOGIN_USER, function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
             var login, dataOut, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -89,7 +88,8 @@ var ApiRestLoginRouter = /** @class */ (function (_super) {
                         return [3 /*break*/, 4];
                     case 3:
                         err_1 = _a.sent();
-                        ErrorHandler_1.default.requestErrorHandler(res, err_1);
+                        // ErrorHandler.requestErrorHandler(res, err);
+                        next(err_1);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

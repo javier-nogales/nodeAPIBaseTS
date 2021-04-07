@@ -1,11 +1,11 @@
 
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import ApiRestAppError from './ApiRestAppError';
 import ApiRestLoginError from './ApiRestLoginError';
 
 class ErrorHandler {
 
-    public controllerErrorHandler (res :Response, err :Error) {
+    public controllerErrorHandler (err:Error, req:Request, res:Response, next:NextFunction) {
         let trace:string|undefined = (err as Error).stack;
         console.log('ERROR Catched with controllerErrorHandler')
         console.log(`Endpoint /login Error:\n${trace}`);
@@ -15,7 +15,9 @@ class ErrorHandler {
         });
     }
     
-    public requestErrorHandler (res :Response, err:any) {
+    public requestErrorHandler (err:Error, req:Request, res:Response, next:NextFunction) {
+        let msg:string = 'Copntact system administrator'
+        let name:string = 'Unknow error';
         if (err instanceof ApiRestAppError) {
             console.log('Aplication error catched.');
             if (err instanceof ApiRestLoginError) {
@@ -23,6 +25,7 @@ class ErrorHandler {
             }
             let msg:string|undefined = (err as Error).message;
             let name:string|undefined = (err as Error).name;
+            res.status(err.status || 500)
             res.json({
                 error: {
                     name,
@@ -31,10 +34,14 @@ class ErrorHandler {
             });
         } else {
             console.log('Unknow error catched.');
-            res.status(500).json({
-                error: "Unknow error"
-            });
-        }   
+            res.status(500);
+        }
+        res.json({
+            error: {
+                name,
+                msg
+            }
+        });
         
     }
 

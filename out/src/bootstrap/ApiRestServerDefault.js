@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+var ErrorHandler_1 = __importDefault(require("../core/error/ErrorHandler"));
 var ApiRestServerDefault = /** @class */ (function () {
     function ApiRestServerDefault(config) {
         this.port = config.port;
@@ -15,7 +19,7 @@ var ApiRestServerDefault = /** @class */ (function () {
     };
     ApiRestServerDefault.prototype.init = function () {
         this.useJson();
-        this.app.use(this.errorHandler);
+        this.app.use(ErrorHandler_1.default.requestErrorHandler);
     };
     ApiRestServerDefault.prototype.useJson = function () {
         this.app.use(express.json());
@@ -23,16 +27,9 @@ var ApiRestServerDefault = /** @class */ (function () {
     ApiRestServerDefault.prototype.useRouters = function (routers) {
         var _this = this;
         routers.forEach(function (router) {
+            router.get().use(ErrorHandler_1.default.requestErrorHandler);
             _this.app.use(router.get());
         });
-    };
-    ApiRestServerDefault.prototype.errorHandler = function (err, req, res, next) {
-        if (res.headersSent) {
-            return next(err);
-        }
-        // res.status(500);
-        // res.render('error', { error: err });
-        return res.status(500).render('500');
     };
     return ApiRestServerDefault;
 }());
